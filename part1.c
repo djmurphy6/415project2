@@ -34,62 +34,64 @@ int main(int argc,char*argv[])
     }
 
     command_line large_token_buffer;
+	
+	int size = atoi(argv[1]);
+	// pid_t *pid_ary = (pid_t *)malloc(sizeof(pid_t) * size);
 
 
     int line_num = 0;
 
-    //loop until the file is over
+ // Allocate an array to store process IDs of child processes
+    pid_t pid_ary[100];  // Assuming a maximum of 100 commands for simplicity
+    int pid_count = 0;
+
+    // Loop to read each line from the file
     while (getline(&line_buf, &len, inFPtr) != -1)
     {
-        //tokenize line buffer
-        //large token is seperated by ";"
-        large_token_buffer = str_filler (line_buf, "\n");
-        //iterate through each large token
-        for (int i = 0; large_token_buffer.command_list[i] != NULL; i++)
-        {
-                    
-            printf("processing command: %s\n", large_token_buffer.command_list[i]);
+        command_line cmd = str_filler(line_buf, " \n");
 
+        // Fork a child process to execute the command
+        pid_t pid = fork();
+        if (pid < 0)
+        {
+            perror("Fork failed");
+            free_command_line(&cmd);
+            continue;
+        }
+        else if (pid == 0)
+        {
+            // In child process: Execute the command
+            if (execvp(cmd.command_list[0], cmd.command_list) == -1)
+            {
+                perror("execvp failed");
+                exit(1);
+            }
+        }
+        else
+        {
+            // In parent process: Store child PID and increment count
+            pid_ary[pid_count++] = pid;
         }
 
-        //free smaller tokens and reset variable
-        free_command_line (&large_token_buffer);
-        //memset (&large_token_buffer, 0, 0);
+        // Free the command line structure
+        free_command_line(&cmd);
     }
 
+    // Wait for all child processes to finish
+    for (int i = 0; i < pid_count; i++)
+    {
+        waitpid(pid_ary[i], NULL, 0);
+    }
+
+    // Print the top script to monitor child processes
+    script_print(pid_ary, pid_count);
+
+    // Clean up and exit
+    free(line_buf);
     fclose(inFPtr);
-    //free line buffer
-    free (line_buf);
-    printf("End of file\nBye Bye\n");
+    printf("All commands processed.\n");
 
-	int n = atol(argv[1]);
-
-	pid_t *child_processes = malloc(n*sizeof(pid_t));	// declare child process pool
-
-	
-	// spawn n new peocesses
-	for(int i=0; i<n; i++){
-		child_processes[i] = fork();
-		if (child_processes[i]<0) {
-			// error handling
-		}
-		if (child_processes[i] == 0) {
-			// if (execvp(path, arg) == -1) {
-				// error handling
-			// }
-
-			//
-			exit(-1);
-		}
-		
-		char *args[] = {".iobound", "-seconds", "15", 0};
-	}
-
-	script_print(child_processes, n);	// call script_print
-
-	while(wait(NULL) > 0);	// wait for children process to finish
-	free(child_processes);	// free mem
-	return 0;
+    return 0;
 }
 
 
