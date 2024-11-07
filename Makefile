@@ -18,5 +18,11 @@ part1.o: part1.c
 string_parser.o: string_parser.c string_parser.h
 	gcc -g -c string_parser.c
 
+cpubound: cpubound.c
+	gcc -g -c cpubound.c
+
+iobound: iobound.c
+	gcc -g -c iobound.c
+
 clean: 
 	rm -f core *.o MCP

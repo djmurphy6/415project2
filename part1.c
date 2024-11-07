@@ -61,7 +61,6 @@ int main(int argc,char*argv[])
         else if (pid == 0)
         {
             // In child process: Execute the command
-			printf("cmd.command_list[0]: %s\n", cmd.command_list[0]);
             if (execvp(cmd.command_list[0], cmd.command_list) == -1)
             {
                 perror("execvp failed");
