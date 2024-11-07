@@ -32,10 +32,10 @@ int main(int argc,char*argv[])
         fclose(inFPtr); // Close the file 
         return 1;
     }
-
-    command_line large_token_buffer;
 	
-	int size = atoi(argv[1]);
+	// int size = atoi(argv[1]);
+	// printf("Size: %d\n", size);
+
 	// pid_t *pid_ary = (pid_t *)malloc(sizeof(pid_t) * size);
 
 
@@ -84,7 +84,7 @@ int main(int argc,char*argv[])
     }
 
     // Print the top script to monitor child processes
-    script_print(pid_ary, pid_count);
+    //script_print(pid_ary, pid_count);
 
     // Clean up and exit
     free(line_buf);
