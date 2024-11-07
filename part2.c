@@ -98,6 +98,8 @@ int main(int argc,char*argv[])
         free_command_line(&cmd);
     }
 
+    // Print the top script to monitor child processes
+    script_print(pid_ary, pid_count);
 
     // send SIGUSR1 
 	signaler(pid_ary, pid_count, SIGUSR1);
@@ -107,9 +109,6 @@ int main(int argc,char*argv[])
 	signaler(pid_ary, pid_count, SIGCONT);	
 	// send SIGINT
 	signaler(pid_ary, pid_count, SIGINT);
-
-    // Print the top script to monitor child processes
-    script_print(pid_ary, pid_count);
 
     // Wait for all child processes to finish
     for (int i = 0; i < pid_count; i++)
