@@ -97,6 +97,11 @@ int main(int argc,char*argv[])
         // Free the command line structure
         free_command_line(&cmd);
     }
+    
+    // Clean up and exit
+    free(line_buf);
+    fclose(inFPtr);
+    printf("All commands processed.\n");
 
 	// Print the top script to monitor child processes
     script_print(pid_ary, pid_count);
@@ -116,13 +121,6 @@ int main(int argc,char*argv[])
     {
         waitpid(pid_ary[i], NULL, 0);
     }
-
-    
-
-    // Clean up and exit
-    free(line_buf);
-    fclose(inFPtr);
-    printf("All commands processed.\n");
 
     return 0;
 }
