@@ -78,14 +78,16 @@ int main(int argc,char*argv[])
         free_command_line(&cmd);
     }
 
+	// Print the top script to monitor child processes
+    script_print(pid_ary, pid_count);
+
     // Wait for all child processes to finish
     for (int i = 0; i < pid_count; i++)
     {
         waitpid(pid_ary[i], NULL, 0);
     }
 
-    // Print the top script to monitor child processes
-    //script_print(pid_ary, pid_count);
+    
 
     // Clean up and exit
     free(line_buf);
