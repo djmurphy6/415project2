@@ -97,11 +97,7 @@ int main(int argc,char*argv[])
         // Free the command line structure
         free_command_line(&cmd);
     }
-    
-    // Clean up and exit
-    free(line_buf);
-    fclose(inFPtr);
-    printf("All commands processed.\n");
+
 
 	// Print the top script to monitor child processes
     script_print(pid_ary, pid_count);
@@ -122,6 +118,10 @@ int main(int argc,char*argv[])
         waitpid(pid_ary[i], NULL, 0);
     }
 
+    // Clean up and exit
+    free(line_buf);
+    fclose(inFPtr);
+    printf("All commands processed.\n");
     return 0;
 }
 
@@ -135,6 +135,7 @@ void signaler(pid_t* pid_ary, int size, int signal)
 		// print: Parent process: <pid> - Sending signal: <signal> to child process: <pid>
 		printf("Parent process %d - Sending Signal: %d to child process: %d\n", getpid(), signal, pid_ary[i]);
 		// send the signal
+        kill(pid_ary[i], signal);
 	}
 }
 
