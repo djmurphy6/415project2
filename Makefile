@@ -19,11 +19,14 @@ part2.o: part2.c
 string_parser.o: string_parser.c string_parser.h
 	gcc -g -c string_parser.c
 
+# Create the cpubound executable
 cpubound: cpubound.c
-	gcc -g -c cpubound.c
+	gcc -g -o cpubound cpubound.c
 
+# Create the iobound executable
 iobound: iobound.c
-	gcc -g -c iobound.c
+	gcc -g -o iobound iobound.c
 
 clean: 
-	rm -f core *.o MCP
+	rm -f core *.o MCP cpubound iobound
+
