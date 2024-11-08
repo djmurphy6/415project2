@@ -19,7 +19,7 @@ part1.o: part1.c
 part2.o: part2.c
 	gcc -g -c part2.c
 
-part2.o: part3.c
+part3.o: part3.c
 	gcc -g -c part3.c
 
 string_parser.o: string_parser.c string_parser.h
