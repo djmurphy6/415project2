@@ -61,9 +61,9 @@ int main(int argc,char*argv[])
         else if (pid == 0)
         {
             // In child process: Execute the command
-            if (execvp(cmd.command_list[0], cmd.command_list) == -1)
-            {
+            if (execvp(cmd.command_list[0], cmd.command_list) == -1) {
                 perror("execvp failed");
+				free_command_line(&cmd);
                 exit(1);
             }
         }
