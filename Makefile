@@ -1,17 +1,14 @@
-all: MCP  cpubound iobound # Compiles the default MCP target
+all: part1 part2 part3 cpubound iobound string_parser.o
 
 # Define separate MCP targets for each part
-MCP_part1: part1.o string_parser.o
-	gcc -g -o MCP part1.o string_parser.o
+part1: part1.o string_parser.o
+	gcc -g -o part1 part1.o string_parser.o
 
-MCP_part2: part2.o string_parser.o
-	gcc -g -o MCP part2.o string_parser.o
+part2: part2.o string_parser.o
+	gcc -g -o part2 part2.o string_parser.o
 
-MCP_part3: part3.o string_parser.o
-	gcc -g -o MCP part3.o string_parser.o
-
-# Default MCP points to the part you’re currently working on (e.g., part2)
-MCP: MCP_part1
+part3: part3.o string_parser.o
+	gcc -g -o part3 part3.o string_parser.o
 
 part1.o: part1.c
 	gcc -g -c part1.c
@@ -34,5 +31,5 @@ iobound: iobound.c
 	gcc -g -o iobound iobound.c
 
 clean: 
-	rm -f core *.o MCP cpubound iobound
+	rm -f core *.o part1 part2 part3 cpubound iobound
 
