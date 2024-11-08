@@ -14,7 +14,6 @@ int pid_count = 0;   // Total count of child processes
 int current_process = 0;  // Index of the currently running process
 
 void signaler(pid_t* pid_ary, int size, int signal);
-void script_print(pid_t* pid_ary, int size);
 void sigalrm_handler(int sig);
 
 int main(int argc, char* argv[]) {
@@ -61,6 +60,7 @@ int main(int argc, char* argv[]) {
             sigwait(&sigset, &sig);
             if (execvp(cmd.command_list[0], cmd.command_list) == -1) {
                 perror("execvp failed");
+                free_command_line(&cmd);
                 exit(1);
             }
         } else {
@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
         }
         free_command_line(&cmd);
     }
-    
+
     signaler(pid_ary, pid_count, SIGUSR1);
 
     alarm(TIME_SLICE);  // Start the time slice for scheduling
