@@ -62,6 +62,7 @@ int main(int argc, char* argv[]) {
                 perror("execvp failed");
                 free_command_line(&cmd);
                 free(line_buf);
+                fclose(inFPtr);
                 exit(1);
             }
         } else {
