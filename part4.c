@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include <string.h>
 #include "string_parser.h"
 
 #define TIME_SLICE 1  // Define time slice duration in seconds
@@ -136,11 +137,30 @@ void print_process_info(pid_t pid) {
     FILE *fp = fopen(path, "r");
     if (fp == NULL) return;
 
+    while (fgets(line, sizeof(line), fp)) {
+        printf("File: %s\n", line);
+    }
+
     // Example: Read memory usage from status file
     while (fgets(line, sizeof(line), fp)) {
         if (strncmp(line, "VmRSS:", 6) == 0) {
             printf("%d\t%s", pid, line + 6);  // Print PID and memory usage
         }
     }
+    /*
+    while (fgets(line, sizeof(line), fp)) {
+        if (strncmp(line, "VmRSS:", 6) == 0) {
+            printf("%d\t%s", pid, line + 6);  // Print PID and memory usage
+        }
+    }
+    */
+   /*
+    while (fgets(line, sizeof(line), fp)) {
+        if (strncmp(line, "VmRSS:", 6) == 0) {
+            printf("%d\t%s", pid, line + 6);  // Print PID and memory usage
+        }
+    }
+    */
+   
     fclose(fp);
 }

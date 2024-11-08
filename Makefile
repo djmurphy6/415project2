@@ -1,4 +1,4 @@
-all: part1 part2 part3 cpubound iobound string_parser.o
+all: part1 part2 part3 part4 cpubound iobound string_parser.o
 
 # Define separate MCP targets for each part
 part1: part1.o string_parser.o
