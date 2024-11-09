@@ -122,12 +122,12 @@ void sigalrm_handler(int sig) {
         print_process_info(pid_ary[i]);
     }
 
-    printf("Suspending process %d\n", pid_ary[current_process]);
+    //printf("Suspending process %d\n", pid_ary[current_process]);
     kill(pid_ary[current_process], SIGSTOP);
 
     current_process = (current_process + 1) % pid_count;
 
-    printf("Resuming process %d\n", pid_ary[current_process]);
+    //printf("Resuming process %d\n", pid_ary[current_process]);
     kill(pid_ary[current_process], SIGCONT);
 
     alarm(TIME_SLICE);
@@ -135,15 +135,16 @@ void sigalrm_handler(int sig) {
 
 void print_process_info(pid_t pid) {
     char path[40], line[256];
+    long utime = 0, stime = 0, virt_mem = 0, nice_value = 0;
+    double total_time;
 
     // CPU Time: /proc/[pid]/stat
     snprintf(path, sizeof(path), "/proc/%d/stat", pid);
     FILE *fp = fopen(path, "r");
     if (fp) {
-        long utime, stime;
-        fscanf(fp, "%*d %*s %*c %*d %*d %*d %*d %*d %*u %*u %*u %*u %*u %ld %ld", &utime, &stime);
+        fscanf(fp, "%*d %*s %*c %*d %*d %*d %*d %*d %*u %*u %*u %*u %*u %ld %ld %*d %ld", &utime, &stime, &nice_value);
         fclose(fp);
-        printf("%d\tCPU Time: %ld ms\t", pid, (utime + stime) * (1000 / sysconf(_SC_CLK_TCK)));
+        total_time = (utime + stime) / (double)sysconf(_SC_CLK_TCK);
     }
 
     // Memory Usage: /proc/[pid]/status
@@ -151,27 +152,21 @@ void print_process_info(pid_t pid) {
     fp = fopen(path, "r");
     if (fp) {
         while (fgets(line, sizeof(line), fp)) {
-            if (strncmp(line, "VmRSS:", 6) == 0) {
-                printf("Memory: %s", line + 6);
+            if (strncmp(line, "VmSize:", 7) == 0) {
+                sscanf(line + 7, "%ld", &virt_mem);
                 break;
             }
         }
         fclose(fp);
     }
 
-    // I/O Read/Write: /proc/[pid]/io
-    snprintf(path, sizeof(path), "/proc/%d/io", pid);
-    fp = fopen(path, "r");
-    if (fp) {
-        long read_bytes = 0, write_bytes = 0;
-        while (fgets(line, sizeof(line), fp)) {
-            if (strncmp(line, "read_bytes:", 11) == 0) {
-                sscanf(line + 11, "%ld", &read_bytes);
-            } else if (strncmp(line, "write_bytes:", 12) == 0) {
-                sscanf(line + 12, "%ld", &write_bytes);
-            }
-        }
-        fclose(fp);
-        printf("I/O Read: %ld bytes\tI/O Write: %ld bytes\n", read_bytes, write_bytes);
-    }
+    // Print formatted output similar to your screenshot
+    printf("PID\tutime\t\tstime\t\ttime\tnice\tvirt mem\n");
+    printf("%d\t%-10.6f\t%-10.6f\t%-10.6f\t%ld\t%ld\n", 
+           pid, 
+           utime / (double)sysconf(_SC_CLK_TCK), 
+           stime / (double)sysconf(_SC_CLK_TCK), 
+           total_time, 
+           nice_value, 
+           virt_mem);
 }
