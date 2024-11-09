@@ -19,10 +19,10 @@ void sigalrm_handler(int sig);
 void print_process_info(pid_t pid);
 
 int main(int argc, char* argv[]) {
-    if (strcmp(argv[2], "-f") == 0) {
+    if (strcmp(argv[1], "-f") == 0) {
         // File mode
 
-        FILE *inFPtr = fopen(argv[1], "r");
+        FILE *inFPtr = fopen(argv[2], "r");
         if (inFPtr == NULL) {
             printf("Error opening file\n");
             return 1;
@@ -134,29 +134,40 @@ void sigalrm_handler(int sig) {
 }
 
 void print_process_info(pid_t pid) {
-    // Access and parse /proc/[pid]/stat, /proc/[pid]/status, /proc/[pid]/io for process data
-    char path[40], line[256];
-    snprintf(path, sizeof(path), "/proc/%d/status", pid);
+    // CPU Time: /proc/[pid]/stat
+    snprintf(path, sizeof(path), "/proc/%d/stat", pid);
     FILE *fp = fopen(path, "r");
-    if (fp == NULL) return;
-
-    while (fgets(line, sizeof(line), fp)) {
-        printf("File: %s\n", line);
+    if (fp) {
+        long utime, stime;
+        fscanf(fp, "%*d %*s %*c %*d %*d %*d %*d %*d %*u %*u %*u %*u %*u %ld %ld", &utime, &stime);
+        fclose(fp);
+        printf("%d\tCPU Time: %ld ms\t", pid, (utime + stime) * (1000 / sysconf(_SC_CLK_TCK)));
     }
-
-    // Example: Read memory usage from status file
-    while (fgets(line, sizeof(line), fp)) {
-        if (strncmp(line, "VmRSS:", 6) == 0) {
-            printf("%d\t%s", pid, line + 6);  // Print PID and memory usage
+    
+    // Memory Usage: /proc/[pid]/status
+    snprintf(path, sizeof(path), "/proc/%d/status", pid);
+    fp = fopen(path, "r");
+    if (fp) {
+        while (fgets(line, sizeof(line), fp)) {
+            if (strncmp(line, "VmRSS:", 6) == 0) {
+                printf("Memory: %s", line + 6);
+                break;
+            }
         }
+        fclose(fp);
     }
-    /*
-    while (fgets(line, sizeof(line), fp)) {
-        if (strncmp(line, "VmRSS:", 6) == 0) {
-            printf("%d\t%s", pid, line + 6);  // Print PID and memory usage
+    
+    // I/O Read/Write: /proc/[pid]/io
+    snprintf(path, sizeof(path), "/proc/%d/io", pid);
+    fp = fopen(path, "r");
+    if (fp) {
+        long read_bytes = 0, write_bytes = 0;
+        while (fgets(line, sizeof(line), fp)) {
+            if (strncmp(line, "read_bytes:", 11) == 0) {
+                sscanf(line + 11, "%ld", &read_bytes);
+            } else if (strncmp(line, "write_bytes:", 12) == 0) {
+                sscanf(line + 12, "%ld", &write_bytes);
+            }
         }
-    }
-    */
-
     fclose(fp);
 }
