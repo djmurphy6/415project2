@@ -18,10 +18,6 @@ void signaler(pid_t* pid_ary, int size, int signal);
 void sigalrm_handler(int sig);
 
 int main(int argc, char* argv[]) {
-    if (argc != 3) {
-        printf("Wrong number of arguments\n");
-        exit(0);
-    }
     if (strcmp(argv[2], "-f") == 0) {
         // File mode
         FILE *inFPtr = fopen(argv[1], "r");
@@ -99,6 +95,9 @@ int main(int argc, char* argv[]) {
         fclose(inFPtr);
         printf("All commands processed.\n");
         return 0;
+    }
+    else{
+        perror("No file inputed");
     }
 }
 

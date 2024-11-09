@@ -19,10 +19,6 @@ void sigalrm_handler(int sig);
 void print_process_info(pid_t pid);
 
 int main(int argc, char* argv[]) {
-    if (argc != 3) {
-        printf("Wrong number of arguments\n");
-        exit(0);
-    }
     if (strcmp(argv[2], "-f") == 0) {
         // File mode
 

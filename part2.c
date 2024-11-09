@@ -125,6 +125,9 @@ int main(int argc,char*argv[])
         printf("All commands processed.\n");
         return 0;
     }
+    else{
+        perror("No file inputed");
+    }
 }
 
 void signaler(pid_t* pid_ary, int size, int signal)
