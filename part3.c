@@ -18,9 +18,9 @@ void signaler(pid_t* pid_ary, int size, int signal);
 void sigalrm_handler(int sig);
 
 int main(int argc, char* argv[]) {
-    if (strcmp(argv[2], "-f") == 0) {
+    if (strcmp(argv[1], "-f") == 0) {
         // File mode
-        FILE *inFPtr = fopen(argv[1], "r");
+        FILE *inFPtr = fopen(argv[2], "r");
         if (inFPtr == NULL) {
             printf("Error opening file\n");
             return 1;
