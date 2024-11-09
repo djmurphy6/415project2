@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
         printf("Wrong number of arguments\n");
         exit(0);
     }
-    if (strcmp(argv[1], "-f") == 0) {
+    if (strcmp(argv[2], "-f") == 0) {
         // File mode
 
         FILE *inFPtr = fopen(argv[1], "r");

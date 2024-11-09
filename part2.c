@@ -23,7 +23,7 @@ int main(int argc,char*argv[])
 
         //opening file to read
         FILE *inFPtr;
-        inFPtr = fopen (argv[1], "r");
+        inFPtr = fopen (argv[2], "r");
         if(inFPtr == NULL) {
             printf("Error opening file");
             return 1;
