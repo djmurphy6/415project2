@@ -134,6 +134,12 @@ void sigalrm_handler(int sig) {
 }
 
 void print_process_info(pid_t pid) {
+    // Access and parse /proc/[pid]/stat, /proc/[pid]/status, /proc/[pid]/io for process data
+    char path[40], line[256];
+    snprintf(path, sizeof(path), "/proc/%d/status", pid);
+    FILE *fp = fopen(path, "r");
+    if (fp == NULL) return;
+
     // CPU Time: /proc/[pid]/stat
     snprintf(path, sizeof(path), "/proc/%d/stat", pid);
     FILE *fp = fopen(path, "r");
