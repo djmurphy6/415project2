@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include <string.h>
 #include "string_parser.h"
 
 void signaler(pid_t* pid_ary, int size, int signal);

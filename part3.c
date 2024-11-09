@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include <string.h>
 #include "string_parser.h"
 
 #define TIME_SLICE 1  // Define time slice duration in seconds
