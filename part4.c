@@ -134,11 +134,7 @@ void sigalrm_handler(int sig) {
 }
 
 void print_process_info(pid_t pid) {
-    // Access and parse /proc/[pid]/stat, /proc/[pid]/status, /proc/[pid]/io for process data
     char path[40], line[256];
-    snprintf(path, sizeof(path), "/proc/%d/status", pid);
-    FILE *fp = fopen(path, "r");
-    if (fp == NULL) return;
 
     // CPU Time: /proc/[pid]/stat
     snprintf(path, sizeof(path), "/proc/%d/stat", pid);
@@ -149,7 +145,7 @@ void print_process_info(pid_t pid) {
         fclose(fp);
         printf("%d\tCPU Time: %ld ms\t", pid, (utime + stime) * (1000 / sysconf(_SC_CLK_TCK)));
     }
-    
+
     // Memory Usage: /proc/[pid]/status
     snprintf(path, sizeof(path), "/proc/%d/status", pid);
     fp = fopen(path, "r");
@@ -162,7 +158,7 @@ void print_process_info(pid_t pid) {
         }
         fclose(fp);
     }
-    
+
     // I/O Read/Write: /proc/[pid]/io
     snprintf(path, sizeof(path), "/proc/%d/io", pid);
     fp = fopen(path, "r");
@@ -175,5 +171,7 @@ void print_process_info(pid_t pid) {
                 sscanf(line + 12, "%ld", &write_bytes);
             }
         }
-    fclose(fp);
+        fclose(fp);
+        printf("I/O Read: %ld bytes\tI/O Write: %ld bytes\n", read_bytes, write_bytes);
+    }
 }
