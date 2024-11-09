@@ -99,7 +99,7 @@ int main(int argc, char* argv[]) {
         return 0;
     }
     else{
-        perror("No file inputed");
+        fprintf(stderr, "No file inputed");
     }
 }
 
