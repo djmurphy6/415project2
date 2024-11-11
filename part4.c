@@ -159,7 +159,7 @@ void print_process_info(pid_t pid) {
         fclose(fp);
     }
 
-    // Print formatted output similar to your screenshot
+    // print info
     printf("PID\tutime\t\tstime\t\ttime\tnice\tvirt mem\n");
     printf("%d\t%-10.6f\t%-10.6f\t%-10.6f\t%ld\t%ld\n", 
            pid, 
