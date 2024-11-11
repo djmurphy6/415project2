@@ -7,7 +7,7 @@
 #include <string.h>
 #include "string_parser.h"
 
-#define TIME_SLICE 1  // Define time slice duration in seconds
+#define TIME_SLICE 2  // Define time slice duration in seconds
 
 // Global variables for scheduling
 pid_t pid_ary[100];  // Array to store child process PIDs
@@ -121,8 +121,6 @@ void sigalrm_handler(int sig) {
         print_process_info(pid_ary[i]);
     }
 
-    alarm(TIME_SLICE);
-
     //printf("Suspending process %d\n", pid_ary[current_process]);
     kill(pid_ary[current_process], SIGSTOP);
 
@@ -130,6 +128,8 @@ void sigalrm_handler(int sig) {
 
     //printf("Resuming process %d\n", pid_ary[current_process]);
     kill(pid_ary[current_process], SIGCONT);
+
+    alarm(TIME_SLICE);
 }
 
 void print_process_info(pid_t pid) {
