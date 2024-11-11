@@ -117,7 +117,6 @@ void sigalrm_handler(int sig) {
 
     // Collect process info
     printf("Process Resource Usage:\n");
-    printf("PID     CPU Time   Mem Usage   I/O Read   I/O Write\n");
     for (int i = 0; i < pid_count; i++) {
         print_process_info(pid_ary[i]);
     }
