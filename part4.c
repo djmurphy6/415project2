@@ -121,6 +121,9 @@ void sigalrm_handler(int sig) {
         print_process_info(pid_ary[i]);
     }
 
+
+    sleep(TIME_SLICE); //Make sure it is allowed to execute for the full amount of time. 
+
     //printf("Suspending process %d\n", pid_ary[current_process]);
     kill(pid_ary[current_process], SIGSTOP);
 

@@ -113,6 +113,8 @@ void signaler(pid_t* pid_ary, int size, int signal) {
 void sigalrm_handler(int sig) {
     if (pid_count == 0) return;
 
+    sleep(TIME_SLICE); // make sure each process gets its full amount of time
+
     printf("Suspending process %d\n", pid_ary[current_process]);
     kill(pid_ary[current_process], SIGSTOP);
 
